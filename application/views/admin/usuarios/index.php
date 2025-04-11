@@ -6,10 +6,11 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>RUT</th>
                             <th>Nombre</th>
                             <th>Email</th>
                             <th>Rol</th>
@@ -17,18 +18,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($usuarios as $usuario): ?>
+                        <?php if(empty($usuarios)): ?>
                             <tr>
-                                <td><?= $usuario->id ?></td>
-                                <td><?= $usuario->nombre ?></td>
-                                <td><?= $usuario->email ?></td>
-                                <td><?= $usuario->rol ?></td>
-                                <td>
-                                    <a href="<?= base_url('admin/editar_usuario/'.$usuario->id) ?>" class="btn btn-sm btn-warning">Editar</a>
-                                    <a href="<?= base_url('admin/eliminar_usuario/'.$usuario->id) ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro?')">Eliminar</a>
-                                </td>
+                                <td colspan="6" class="text-center">No hay usuarios registrados</td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php else: ?>
+                            <?php foreach($usuarios as $usuario): ?>
+                                <tr>
+                                    <td><?= $usuario->id ?></td>
+                                    <td><?= $usuario->rut ?></td>
+                                    <td><?= $usuario->nombre ?></td>
+                                    <td><?= $usuario->email ?></td>
+                                    <td>
+                                        <span class="badge <?= $usuario->role == 'administrador' ? 'bg-danger' : 'bg-primary' ?>">
+                                            <?= ucfirst($usuario->role) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="<?= base_url('admin/editar_usuario/'.$usuario->id) ?>" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

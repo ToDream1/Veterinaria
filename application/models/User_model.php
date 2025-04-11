@@ -38,7 +38,8 @@ class User_model extends CI_Model {
     }
 
     public function get_all_users() {
-        return $this->db->get('users')->result();
+        $query = $this->db->get('users');
+        return $query->result();
     }
 
     public function crear($datos) {

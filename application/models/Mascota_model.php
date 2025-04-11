@@ -62,4 +62,12 @@ class Mascota_model extends CI_Model {
         
         return $result;
     }
+
+    public function get_all_mascotas() {
+        $this->db->select('mascotas.*, users.nombre as nombre_propietario');
+        $this->db->from('mascotas');
+        $this->db->join('users', 'users.id = mascotas.usuario_id', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
