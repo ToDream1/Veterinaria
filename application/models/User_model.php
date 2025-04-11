@@ -32,6 +32,7 @@ class User_model extends CI_Model {
      * 
      * @return int Número total de usuarios
      */
+    // Añade este método si no existe
     public function count_users() {
         return $this->db->count_all('users');
     }

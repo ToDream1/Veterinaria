@@ -20,7 +20,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="card-title">Usuarios</h6>
-                            <h2 class="mb-0">0</h2>
+                            <h2 class="mb-0"><?= isset($total_usuarios) ? $total_usuarios : 0 ?></h2>
                         </div>
                         <i class="fas fa-users fa-2x"></i>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="card-title">Mascotas</h6>
-                            <h2 class="mb-0">0</h2>
+                            <h2 class="mb-0"><?= isset($total_mascotas) ? $total_mascotas : 0 ?></h2>
                         </div>
                         <i class="fas fa-paw fa-2x"></i>
                     </div>
@@ -54,7 +54,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="card-title">Citas</h6>
-                            <h2 class="mb-0">0</h2>
+                            <h2 class="mb-0"><?= isset($total_citas) ? $total_citas : 0 ?></h2>
                         </div>
                         <i class="fas fa-calendar-check fa-2x"></i>
                     </div>
@@ -74,27 +74,27 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('admin/crear_usuario') ?>" class="btn btn-outline-primary w-100 py-3">
-                        <i class="fas fa-user-plus mb-2 d-block fs-4"></i>
-                        Nuevo Usuario
+                    <a href="<?= base_url('admin/crear_usuario') ?>" class="btn btn-outline-primary w-100 py-3 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user-plus me-2 fs-4"></i>
+                        <span>Nuevo Usuario</span>
                     </a>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('admin/crear_mascota') ?>" class="btn btn-outline-success w-100 py-3">
-                        <i class="fas fa-dog mb-2 d-block fs-4"></i>
-                        Nueva Mascota
+                    <a href="<?= base_url('admin/crear_mascota') ?>" class="btn btn-outline-success w-100 py-3 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-dog me-2 fs-4"></i>
+                        <span>Nueva Mascota</span>
                     </a>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('admin/crear_cita') ?>" class="btn btn-outline-info w-100 py-3">
-                        <i class="fas fa-calendar-plus mb-2 d-block fs-4"></i>
-                        Nueva Cita
+                    <a href="<?= base_url('admin/crear_cita') ?>" class="btn btn-outline-info w-100 py-3 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-calendar-plus me-2 fs-4"></i>
+                        <span>Nueva Cita</span>
                     </a>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('auth/logout') ?>" class="btn btn-outline-danger w-100 py-3">
-                        <i class="fas fa-sign-out-alt mb-2 d-block fs-4"></i>
-                        Cerrar Sesión
+                    <a href="<?= base_url('auth/logout') ?>" class="btn btn-outline-danger w-100 py-3 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sign-out-alt me-2 fs-4"></i>
+                        <span>Cerrar Sesión</span>
                     </a>
                 </div>
             </div>

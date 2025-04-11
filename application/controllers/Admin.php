@@ -15,15 +15,28 @@ class Admin extends CI_Controller {
 
     public function index() {
         $data['titulo'] = 'Dashboard Administrativo';
-        // Comentamos temporalmente estas líneas para evitar errores
-        // $data['total_usuarios'] = $this->User_model->count_users();
-        // $data['total_mascotas'] = $this->Mascota_model->count_mascotas();
-        // $data['actividades'] = $this->Actividad_model->obtener_actividades();
         
-        // Agregamos valores por defecto
-        $data['total_usuarios'] = 0;
-        $data['total_mascotas'] = 0;
+        // Eliminar estas líneas de valores estáticos
+        // $data['total_usuarios'] = 5; 
+        // $data['total_mascotas'] = 10;
+        // $data['total_citas'] = 3;
+        
+        // Los modelos ya están cargados en el constructor, no es necesario cargarlos de nuevo
+        // $this->load->model('User_model');
+        // $this->load->model('Mascota_model');
+        
+        // Obtener los datos reales de la base de datos
+        $data['total_usuarios'] = $this->User_model->count_users();
+        $data['total_mascotas'] = $this->Mascota_model->count_mascotas();
+        $data['total_citas'] = 0; // Por ahora dejamos esto en 0
+        
+        // Comentamos esto por ahora si no está implementado
+        // $data['actividades'] = $this->Actividad_model->obtener_actividades();
         $data['actividades'] = [];
+        
+        // ELIMINAR ESTAS LÍNEAS - están sobrescribiendo los valores reales con ceros
+        // $data['total_usuarios'] = 0;
+        // $data['total_mascotas'] = 0;
         
         $this->load->view('admin/templates/header', $data);
         $this->load->view('admin/templates/navbar', $data);

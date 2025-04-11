@@ -24,11 +24,8 @@ class Mascota_model extends CI_Model {
         return $this->db->insert('mascotas', $mascota_data);
     }
 
-    /**
-     * Cuenta el número total de mascotas registradas
-     * 
-     * @return int Número total de mascotas
-     */
+    // Añade este método al modelo Mascota_model si no existe
+    // Añade este método si no existe
     public function count_mascotas() {
         return $this->db->count_all('mascotas');
     }
