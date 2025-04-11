@@ -156,4 +156,18 @@ class Admin extends CI_Controller {
             redirect('admin/mascotas');
         }
     }
+    
+    // Añadir este método al controlador Admin
+    public function estadisticas() {
+        $data['titulo'] = 'Estadísticas del Sistema';
+        
+        // Cargar datos para los gráficos
+        $data['mascotas'] = $this->Mascota_model->get_all_mascotas();
+        $data['usuarios'] = $this->User_model->get_all_users();
+        
+        $this->load->view('admin/templates/header', $data);
+        $this->load->view('admin/templates/navbar');
+        $this->load->view('admin/estadisticas/index', $data);
+        $this->load->view('admin/templates/footer');
+    }
 }
