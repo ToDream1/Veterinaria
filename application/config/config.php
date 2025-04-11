@@ -23,7 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/Veterinaria/';
+$config['base_url'] = 'http://localhost/veterinaria/Veterinaria/';
+
 $config['index_page'] = 'index.php';
 $config['uri_protocol'] = 'REQUEST_URI';
 
@@ -524,3 +525,5 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+$config['log_threshold'] = 1;

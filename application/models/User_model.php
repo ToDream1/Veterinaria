@@ -27,7 +27,12 @@ class User_model extends CI_Model {
         return 'password_invalido';
     }
 
-    public function contar_usuarios() {
+    /**
+     * Cuenta el número total de usuarios en el sistema
+     * 
+     * @return int Número total de usuarios
+     */
+    public function count_users() {
         return $this->db->count_all('users');
     }
 

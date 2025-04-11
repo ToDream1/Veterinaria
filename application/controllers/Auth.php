@@ -11,7 +11,7 @@ class Auth extends CI_Controller {
     public function index() {
         if($this->session->userdata('logged_in')) {
             if($this->session->userdata('role') === 'administrador') {
-                redirect('admin/dashboard');
+                redirect('admin');  // Cambiado de 'admin/dashboard' a 'admin'
             } else {
                 redirect('user/index');
             }
@@ -38,7 +38,7 @@ class Auth extends CI_Controller {
             $this->session->set_userdata($userdata);
             
             if($result->role === 'administrador') {
-                redirect('admin/dashboard');
+                redirect('admin');  // Cambiado de 'admin/dashboard' a 'admin'
             } else {
                 redirect('user/index');
             }

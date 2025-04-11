@@ -14,9 +14,16 @@ class Actividad_model extends CI_Model {
         return $this->db->insert('actividades', $data);
     }
     
-    public function obtener_actividades() {
+    /**
+     * Obtiene las actividades recientes del sistema
+     * 
+     * @param int $limit Límite de registros a obtener
+     * @return array Lista de actividades
+     */
+    public function obtener_actividades($limit = 10) {
         $this->db->order_by('fecha', 'DESC');
-        $this->db->limit(10); // Mostrar solo las últimas 10 actividades
-        return $this->db->get('actividades')->result();
+        $this->db->limit($limit);
+        $query = $this->db->get('actividades');
+        return $query->result();
     }
 }

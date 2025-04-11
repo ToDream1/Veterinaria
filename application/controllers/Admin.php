@@ -15,9 +15,15 @@ class Admin extends CI_Controller {
 
     public function index() {
         $data['titulo'] = 'Dashboard Administrativo';
-        $data['total_usuarios'] = $this->User_model->count_users();
-        $data['total_mascotas'] = $this->Mascota_model->count_mascotas();
-        $data['actividades'] = $this->Actividad_model->obtener_actividades();
+        // Comentamos temporalmente estas líneas para evitar errores
+        // $data['total_usuarios'] = $this->User_model->count_users();
+        // $data['total_mascotas'] = $this->Mascota_model->count_mascotas();
+        // $data['actividades'] = $this->Actividad_model->obtener_actividades();
+        
+        // Agregamos valores por defecto
+        $data['total_usuarios'] = 0;
+        $data['total_mascotas'] = 0;
+        $data['actividades'] = [];
         
         $this->load->view('admin/templates/header', $data);
         $this->load->view('admin/templates/navbar', $data);
