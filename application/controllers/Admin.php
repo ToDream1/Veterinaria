@@ -77,17 +77,32 @@ class Admin extends CI_Controller {
     public function editar_usuario($id) {
         if ($this->input->post()) {
             $datos = $this->input->post();
+            
+            // Verificar si se está cambiando la contraseña
+            if (empty($datos['password'])) {
+                unset($datos['password']);
+            }
+            
             if($this->User_model->actualizar($id, $datos)) {
                 $this->Actividad_model->registrar_actividad([
                     'accion' => 'UPDATE',
                     'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre']
                 ]);
+                $this->session->set_flashdata('success', 'Usuario actualizado correctamente');
                 redirect('admin/usuarios');
+            } else {
+                $this->session->set_flashdata('error', 'Error al actualizar el usuario');
             }
         }
 
         $data['titulo'] = 'Editar Usuario';
-        $data['usuario'] = $this->User_model->get_user($id);
+        $data['usuario'] = $this->User_model->get_user_by_id($id);
+        
+        if (!$data['usuario']) {
+            $this->session->set_flashdata('error', 'Usuario no encontrado');
+            redirect('admin/usuarios');
+        }
+        
         $this->load->view('admin/templates/header', $data);
         $this->load->view('admin/templates/navbar');
         $this->load->view('admin/usuarios/editar', $data);
@@ -158,6 +173,37 @@ class Admin extends CI_Controller {
     }
     
     // Añadir este método al controlador Admin
+    // Cambiar de private a public para que sea accesible desde la vista
+    public function get_badge_color($accion) {
+        switch(strtoupper($accion)) {
+            case 'CREATE':
+                return 'bg-success';
+            case 'UPDATE':
+                return 'bg-warning';
+            case 'DELETE':
+                return 'bg-danger';
+            case 'LOGIN':
+                return 'bg-info';
+            case 'LOGOUT':
+                return 'bg-secondary';
+            default:
+                return 'bg-secondary';
+        }
+    }
+    public function actividades() {
+        $data['titulo'] = 'Registro de Actividad';
+        
+        // Cargar el modelo de actividades
+        $this->load->model('Actividad_model');
+        
+        // Obtener todas las actividades ordenadas por fecha descendente (más recientes primero)
+        $data['actividades'] = $this->Actividad_model->obtener_actividades();
+        
+        $this->load->view('admin/templates/header', $data);
+        $this->load->view('admin/templates/navbar');
+        $this->load->view('admin/actividades/index', $data);
+        $this->load->view('admin/templates/footer');
+    }
     public function estadisticas() {
         $data['titulo'] = 'Estadísticas del Sistema';
         

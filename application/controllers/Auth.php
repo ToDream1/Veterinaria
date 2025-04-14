@@ -6,6 +6,7 @@ class Auth extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('User_model');
+        $this->load->model('Actividad_model'); // Cargar el modelo de actividades
     }
 
     public function index() {
@@ -36,6 +37,12 @@ class Auth extends CI_Controller {
             );
             
             $this->session->set_userdata($userdata);
+            
+            // Registrar la actividad de inicio de sesión
+            $this->Actividad_model->registrar_actividad([
+                'accion' => 'LOGIN',
+                'descripcion' => 'El usuario ' . $result->nombre . ' ha iniciado sesión'
+            ]);
             
             if($result->role === 'administrador') {
                 redirect('admin');  // Cambiado de 'admin/dashboard' a 'admin'
@@ -89,7 +96,37 @@ class Auth extends CI_Controller {
     }
 
     public function logout() {
+        // Registrar la actividad de cierre de sesión
+        if ($this->session->userdata('logged_in')) {
+            $this->Actividad_model->registrar_actividad([
+                'accion' => 'LOGOUT',
+                'descripcion' => 'El usuario ' . $this->session->userdata('nombre') . ' ha cerrado sesión'
+            ]);
+        }
+        
+        // Destruir la sesión
         $this->session->sess_destroy();
-        redirect('auth');
+        
+        // Redirigir a la página de login
+        redirect('auth/login');
+    }
+    
+    // Añade este método al controlador Auth
+    public function check_role() {
+        // Si el usuario no ha iniciado sesión, redirigir al login
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+            return;
+        }
+        
+        // Verificar el rol y redirigir según corresponda
+        $role = $this->session->userdata('role');
+        $current_controller = $this->router->fetch_class();
+        
+        if ($role === 'administrador' && $current_controller !== 'admin') {
+            redirect('admin/dashboard');
+        } elseif ($role !== 'administrador' && $current_controller === 'admin') {
+            redirect('user/index');
+        }
     }
 }

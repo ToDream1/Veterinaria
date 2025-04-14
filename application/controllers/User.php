@@ -134,20 +134,10 @@ class User extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    // En el método agregar_mascota, asegúrate de que se registre la actividad
     public function agregar_mascota() {
-        if (!$this->session->userdata('logged_in') || $this->session->userdata('role') === 'admin') {
-            redirect('auth/login');
-        }
-
-        if ($this->input->method() == 'post') {
-            // Obtener el ID del usuario de la sesión
-            $usuario_id = $this->session->userdata('id');
-            
-            if (!$usuario_id) {
-                $this->session->set_flashdata('error', 'Error de sesión');
-                redirect('auth/login');
-            }
-            
+        // Validar y procesar el formulario
+        if ($this->input->post()) {
             $data = array(
                 'nombre' => $this->input->post('nombre'),
                 'especie' => $this->input->post('especie'),
@@ -157,32 +147,29 @@ class User extends CI_Controller {
                 'peso' => $this->input->post('peso'),
                 'color' => $this->input->post('color'),
                 'alergias_conocidas' => $this->input->post('alergias_conocidas') ?: 'Ninguna conocida',
-                'usuario_id' => $usuario_id,
-                'created_at' => date('Y-m-d H:i:s')
+                'usuario_id' => $this->session->userdata('id')
             );
-
-            if ($this->Mascota_model->agregar_mascota($data)) {
+            
+            if ($this->Mascota_model->crear_mascota($data)) {
+                // Registrar la actividad
+                $this->load->model('Actividad_model');
+                $this->Actividad_model->registrar_actividad([
+                    'accion' => 'CREATE',
+                    'descripcion' => 'El usuario registró una nueva mascota: ' . $data['nombre']
+                ]);
+                
                 $this->session->set_flashdata('success', 'Mascota agregada exitosamente');
                 redirect('user/mascotas');
             } else {
                 $this->session->set_flashdata('error', 'Error al agregar la mascota');
                 redirect('user/nueva_mascota');
             }
+        } else {
+            // Si no hay datos POST, mostrar el formulario
+            $this->load->view('templates/header');
+            $this->load->view('user/nueva_mascota');
+            $this->load->view('templates/footer');
         }
-    }
-
-    public function ver_mascota($id) {
-        $data['mascota'] = $this->Mascota_model->get_mascota($id);
-        
-        // Verificar que la mascota exista y pertenezca al usuario
-        if (!$data['mascota'] || $data['mascota']->usuario_id != $this->session->userdata('id')) {
-            $this->session->set_flashdata('error', 'Mascota no encontrada');
-            redirect('user/mascotas');
-        }
-
-        $this->load->view('templates/header');
-        $this->load->view('user/ver_mascota', $data);
-        $this->load->view('templates/footer');
     }
 
     public function editar_mascota($id) {
@@ -200,14 +187,22 @@ class User extends CI_Controller {
                 'color' => $this->input->post('color'),
                 'alergias_conocidas' => $this->input->post('alergias_conocidas') ?: 'Ninguna conocida'
             );
-
+        
             // Agregar log para debug
             log_message('debug', 'Actualizando mascota: ' . print_r($update_data, true));
-
+        
             if ($this->Mascota_model->actualizar_mascota($id, $update_data)) {
+                // Registrar la actividad
+                $this->load->model('Actividad_model');
+                $this->Actividad_model->registrar_actividad([
+                    'accion' => 'UPDATE',
+                    'descripcion' => 'El usuario actualizó la mascota: ' . $update_data['nombre']
+                ]);
+                
                 $this->session->set_flashdata('success', 'Mascota actualizada exitosamente');
                 redirect('user/mascotas');
-            } else {
+            }
+            else {
                 $this->session->set_flashdata('error', 'Error al actualizar la mascota');
                 redirect('user/editar_mascota/' . $id);
             }
@@ -227,7 +222,7 @@ class User extends CI_Controller {
             redirect('user/mascotas');
             return;
         }
-
+    
         if ($this->Mascota_model->eliminar_mascota($id)) {
             $this->session->set_flashdata('success', 'Mascota eliminada exitosamente');
         } else {
@@ -237,7 +232,7 @@ class User extends CI_Controller {
         
         redirect('user/mascotas');
     }
-    
+
     public function debug_session() {
         echo "<pre>";
         print_r($this->session->userdata());
@@ -246,4 +241,7 @@ class User extends CI_Controller {
         echo "</pre>";
         die();
     }
-}
+    
+    // Añadir cualquier otro método que necesites aquí
+    
+} // Esta es la llave de cierre que falta para la clase User

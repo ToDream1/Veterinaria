@@ -67,37 +67,49 @@
         </div>
     </div>
     
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Acciones Rápidas</h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('admin/crear_usuario') ?>" class="btn btn-outline-primary w-100 py-3 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-user-plus me-2 fs-4"></i>
-                        <span>Nuevo Usuario</span>
-                    </a>
+    <!-- Añadir botones para crear nuevos usuarios y mascotas -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Acciones Rápidas</h5>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('admin/crear_mascota') ?>" class="btn btn-outline-success w-100 py-3 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-dog me-2 fs-4"></i>
-                        <span>Nueva Mascota</span>
-                    </a>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('admin/crear_cita') ?>" class="btn btn-outline-info w-100 py-3 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-calendar-plus me-2 fs-4"></i>
-                        <span>Nueva Cita</span>
-                    </a>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <a href="<?= base_url('auth/logout') ?>" class="btn btn-outline-danger w-100 py-3 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-sign-out-alt me-2 fs-4"></i>
-                        <span>Cerrar Sesión</span>
-                    </a>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="<?= base_url('admin/crear_usuario') ?>" class="btn btn-outline-primary w-100 py-3 hover-white text-center">
+                                <i class="fas fa-user-plus mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
+                                Nuevo Usuario
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="<?= base_url('admin/crear_mascota') ?>" class="btn btn-outline-success w-100 py-3 hover-white text-center">
+                                <i class="fas fa-paw mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
+                                Nueva Mascota
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="<?= base_url('admin/citas') ?>" class="btn btn-outline-info w-100 py-3 hover-white text-center">
+                                <i class="fas fa-calendar-plus mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
+                                Nueva Cita
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="<?= base_url('auth/logout') ?>" class="btn btn-outline-danger w-100 py-3 hover-white text-center">
+                                <i class="fas fa-sign-out-alt mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
+                                Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Agregar estilos personalizados al final del archivo -->
+    <style>
+        .hover-white:hover {
+            color: white !important;
+        }
+    </style>
 </div>

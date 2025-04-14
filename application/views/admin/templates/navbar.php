@@ -28,6 +28,12 @@
                         <i class="fas fa-chart-pie me-1"></i> Estadísticas
                     </a>
                 </li>
+                <!-- Nueva sección para Registro de Actividad -->
+                <li class="nav-item">
+                    <a class="nav-link <?= $this->uri->segment(2) == 'actividades' ? 'active' : '' ?>" href="<?= base_url('admin/actividades') ?>">
+                        <i class="fas fa-history me-1"></i> Registro de Actividad
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">

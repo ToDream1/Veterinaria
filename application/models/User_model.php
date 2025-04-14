@@ -3,30 +3,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User_model extends CI_Model {
     
+    public function __construct() {
+        parent::__construct();
+    }
+    
+    // Aquí deberías tener un método crear() o similar
+    // Si no existe, necesitamos implementarlo
+    
     public function login($rut, $password) {
         $this->db->where('rut', $rut);
-        $user = $this->db->get('users')->row();
+        $query = $this->db->get('users');
         
-        if (!$user) {
+        if($query->num_rows() == 0) {
             return 'rut_invalido';
         }
         
-        // Verificar primero con password_verify para contraseñas hasheadas
-        if (password_verify($password, $user->password)) {
-            return $user;
-        }
+        $user = $query->row();
         
-        // Si falla, verificar con md5 para compatibilidad con contraseñas antiguas
-        if (md5($password) === $user->password) {
-            // Actualizar a hash seguro para próximos logins
-            $this->db->where('id', $user->id);
-            $this->db->update('users', ['password' => password_hash($password, PASSWORD_DEFAULT)]);
+        if(password_verify($password, $user->password)) {
             return $user;
+        } else {
+            return 'password_invalido';
         }
-        
-        return 'password_invalido';
     }
-
+    
     /**
      * Cuenta el número total de usuarios en el sistema
      * 
@@ -43,19 +43,35 @@ class User_model extends CI_Model {
     }
 
     public function crear($datos) {
+        // Eliminar confirm_password si existe en el array
+        if (isset($datos['confirm_password'])) {
+            unset($datos['confirm_password']);
+        }
+        
+        // Encriptar la contraseña antes de guardarla
         $datos['password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
+        
+        // Insertar en la base de datos
         return $this->db->insert('users', $datos);
     }
 
     public function actualizar($id, $datos) {
+        // Preparar los datos para actualizar
         $data = array(
+            'rut' => $datos['rut'],
             'nombre' => $datos['nombre'],
-            'email' => $datos['email'],
+            'email' => isset($datos['email']) ? $datos['email'] : NULL,
+            'direccion' => isset($datos['direccion']) ? $datos['direccion'] : '',
+            'telefono' => isset($datos['telefono']) ? $datos['telefono'] : '',
             'role' => $datos['role']
         );
-        if(!empty($datos['password'])) {
+        
+        // Si se proporcionó una nueva contraseña, encriptarla
+        if(isset($datos['password']) && !empty($datos['password'])) {
             $data['password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
         }
+        
+        // Actualizar el usuario en la base de datos
         $this->db->where('id', $id);
         return $this->db->update('users', $data);
     }

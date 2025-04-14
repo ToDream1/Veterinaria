@@ -46,6 +46,7 @@ $autoload['packages'] = array();
 |  Auto-load Libraries
 | -------------------------------------------------------------------
 */
+// Busca esta línea y asegúrate de que 'session' esté incluido
 $autoload['libraries'] = array('database', 'session', 'form_validation');
 $autoload['helper'] = array('url', 'form');
 
