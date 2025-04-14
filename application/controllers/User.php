@@ -18,6 +18,7 @@ class User extends CI_Controller {
         }
         
         $this->load->model('Mascota_model');
+        $this->load->model('Actividad_model'); // Añadiendo el modelo de actividades
     }
 
     public function index() {
@@ -103,37 +104,51 @@ class User extends CI_Controller {
             redirect('auth/login');
         }
 
-        $usuario_id = $this->session->userdata('id');
-        
-        // Inicializar array para datos a actualizar
-        $data = array(
-            'nombre' => $this->input->post('nombre'),
-            'email' => $this->input->post('email'),
-            'telefono' => $this->input->post('telefono'),
-            'direccion' => $this->input->post('direccion')
-        );
-        
-        // Verificar si se proporcionó una nueva contraseña
-        $password = $this->input->post('password');
-        if (!empty($password)) {
-            if ($password === $this->input->post('confirm_password')) {
-                $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+        if ($this->input->post()) {
+            $id = $this->session->userdata('id');
+            $datos = $this->input->post();
+            
+            // Remove confirm_password field as it's not in the database
+            unset($datos['confirm_password']);
+            
+            if($this->Usuario_model->actualizar($id, $datos)) {
+                // Registrar la actividad
+                $this->Actividad_model->registrar_actividad([
+                    'accion' => 'UPDATE',
+                    'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre'],
+                    'usuario_id' => $id
+                ]);
+                
+                $this->session->set_flashdata('success', 'Perfil actualizado correctamente');
             } else {
-                $this->session->set_flashdata('error', 'Las contraseñas no coinciden');
-                redirect('user/editar_perfil');
-                return;
+                $this->session->set_flashdata('error', 'Error al actualizar el perfil');
             }
+            redirect('user/perfil');
+        }
+    }
+
+    public function eliminar_cuenta() {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
         }
 
-        // Actualizar los datos del usuario
-        if ($this->Usuario_model->actualizar($usuario_id, $data)) {
-            $this->session->set_flashdata('success', 'Datos actualizados correctamente');
+        $id = $this->session->userdata('id');
+        $usuario = $this->Usuario_model->get_usuario($id);
+
+        if ($this->Usuario_model->eliminar($id)) {
+            // Registrar la actividad antes de cerrar sesión
+            $this->Actividad_model->registrar_actividad([
+                'accion' => 'DELETE',
+                'descripcion' => 'El usuario eliminó su cuenta: ' . $usuario->nombre,
+                'usuario_id' => $id
+            ]);
+            
+            $this->session->sess_destroy();
+            redirect('auth/login');
         } else {
-            $this->session->set_flashdata('error', 'Error al actualizar los datos');
+            $this->session->set_flashdata('error', 'Error al eliminar la cuenta');
+            redirect('user/perfil');
         }
-
-        // Redirigir a editar_perfil
-        redirect('user/editar_perfil');
     }
 
     public function nueva_mascota() {

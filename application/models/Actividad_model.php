@@ -8,21 +8,11 @@ class Actividad_model extends CI_Model {
     }
     
     public function registrar_actividad($datos) {
-        $data = array(
-            'usuario_id' => $this->session->userdata('id'),  // Make sure this matches your database column name
-            'accion' => $datos['accion'],
-            'descripcion' => $datos['descripcion'],
-            'fecha' => date('Y-m-d H:i:s')
-        );
+        // Add current timestamp with proper timezone
+        date_default_timezone_set('America/Santiago'); // Set to Chile timezone
+        $datos['fecha'] = date('Y-m-d H:i:s');
         
-        // Check if the column exists in the database table
-        // If not, remove it from the data array to prevent errors
-        $fields = $this->db->list_fields('actividades');
-        if (!in_array('usuario_id', $fields)) {
-            unset($data['usuario_id']);
-        }
-        
-        return $this->db->insert('actividades', $data);
+        return $this->db->insert('actividades', $datos);
     }
     
     public function get_all_actividades() {

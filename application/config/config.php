@@ -528,4 +528,5 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+$config['time_zone'] = 'America/Santiago';
 $config['log_threshold'] = 1;

@@ -255,13 +255,13 @@ class Admin extends CI_Controller {
     // Modificar el método actividades para corregir la verificación de rol
     // En el método que maneja la página de actividades
     public function actividades($pagina = 1) {
-        // Verificar que el usuario tenga permisos
+        // Verificar que el usuario esté logueado (sin restricción de rol)
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
         
         // Configurar la paginación
-        $por_pagina = 8; // Cambiado de 10 a 8
+        $por_pagina = 8;
         
         // Obtener filtros de la URL
         $filtros = array(
@@ -324,8 +324,8 @@ class Admin extends CI_Controller {
     
     // Añadir este método para el filtro en tiempo real
     public function obtener_todas_actividades() {
-        // Verificar que el usuario tenga permisos
-        if (!$this->session->userdata('logged_in') || $this->session->userdata('role') != 'admin') {
+        // Verificar solo que el usuario esté logueado
+        if (!$this->session->userdata('logged_in')) {
             $this->output->set_status_header(403);
             echo json_encode(['error' => 'No autorizado']);
             return;
