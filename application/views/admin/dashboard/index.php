@@ -1,4 +1,6 @@
 <div class="container mt-4">
+    <!-- Remove the flash message code from here -->
+    
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
@@ -13,6 +15,7 @@
         </div>
     </div>
     
+    <!-- Rest of the dashboard content remains unchanged -->
     <div class="row mb-4">
         <div class="col-md-4 mb-3">
             <div class="card bg-primary text-white h-100">
@@ -77,27 +80,35 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3 mb-3">
-                            <a href="<?= base_url('admin/crear_usuario') ?>" class="btn btn-outline-primary w-100 py-3 hover-white text-center">
-                                <i class="fas fa-user-plus mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
-                                Nuevo Usuario
+                            <a href="<?= base_url('admin/crear_usuario') ?>" class="card text-center p-3 text-decoration-none btn-hover-effect text-primary">
+                                <div class="mb-2">
+                                    <i class="fas fa-user-plus fa-3x"></i>
+                                </div>
+                                <div>Nuevo Usuario</div>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="<?= base_url('admin/crear_mascota') ?>" class="btn btn-outline-success w-100 py-3 hover-white text-center">
-                                <i class="fas fa-paw mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
-                                Nueva Mascota
+                            <a href="<?= base_url('admin/crear_mascota') ?>" class="card text-center p-3 text-decoration-none btn-hover-effect text-success">
+                                <div class="mb-2">
+                                    <i class="fas fa-paw fa-3x"></i>
+                                </div>
+                                <div>Nueva Mascota</div>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="<?= base_url('admin/citas') ?>" class="btn btn-outline-info w-100 py-3 hover-white text-center">
-                                <i class="fas fa-calendar-plus mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
-                                Nueva Cita
+                            <a href="<?= base_url('admin/crear_cita') ?>" class="card text-center p-3 text-decoration-none btn-hover-effect text-info">
+                                <div class="mb-2">
+                                    <i class="fas fa-calendar-plus fa-3x"></i>
+                                </div>
+                                <div>Nueva Cita</div>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="<?= base_url('auth/logout') ?>" class="btn btn-outline-danger w-100 py-3 hover-white text-center">
-                                <i class="fas fa-sign-out-alt mb-2 d-block mx-auto" style="font-size: 1.5rem;"></i>
-                                Cerrar Sesión
+                            <a href="<?= base_url('auth/logout') ?>" class="card text-center p-3 text-decoration-none btn-hover-effect text-danger">
+                                <div class="mb-2">
+                                    <i class="fas fa-sign-out-alt fa-3x"></i>
+                                </div>
+                                <div>Cerrar Sesión</div>
                             </a>
                         </div>
                     </div>
@@ -110,6 +121,35 @@
     <style>
         .hover-white:hover {
             color: white !important;
+        }
+        
+        /* Estilos para el efecto hover en los botones de acción rápida */
+        .btn-hover-effect {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hover-effect:hover {
+            color: white !important;
+        }
+        
+        .btn-hover-effect.text-primary:hover {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        
+        .btn-hover-effect.text-success:hover {
+            background-color: #198754;
+            border-color: #198754;
+        }
+        
+        .btn-hover-effect.text-info:hover {
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+        }
+        
+        .btn-hover-effect.text-danger:hover {
+            background-color: #dc3545;
+            border-color: #dc3545;
         }
     </style>
 </div>

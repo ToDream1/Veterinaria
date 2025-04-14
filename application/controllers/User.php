@@ -60,49 +60,42 @@ class User extends CI_Controller {
             return;
         }
     
-        $user_id = $this->session->userdata('id'); // Cambiado de user_id a id
+        $user_id = $this->session->userdata('id');
         $this->load->model('Usuario_model');
-        $data['usuario'] = $this->Usuario_model->get_usuario($user_id); // Usando get_usuario en lugar de get_usuario_by_id
+        $data['usuario'] = $this->Usuario_model->get_usuario($user_id);
     
         if (!$data['usuario']) {
             $this->session->set_flashdata('error', 'No se pudo cargar la información del usuario');
             redirect('user/index');
             return;
         }
+        
+        // Asegurarse de que el RUT esté disponible
+        if (!isset($data['usuario']->rut) && $this->session->userdata('rut')) {
+            $data['usuario']->rut = $this->session->userdata('rut');
+        }
     
         $this->load->view('user/perfil_nuevo', $data);
     }
 
     public function editar_perfil() {
-        if (!$this->session->userdata('logged_in')) {
-            redirect('auth/login');
+        // Obtener datos del usuario actual
+        $usuario_id = $this->session->userdata('id');
+        $data['usuario'] = $this->Usuario_model->get_usuario($usuario_id);
+        
+        if (!$data['usuario']) {
+            $this->session->set_flashdata('error', 'No se pudo cargar la información del usuario');
+            redirect('user/index');
             return;
         }
-
-        $usuario_id = $this->session->userdata('id');
-        $this->load->model('Usuario_model');
-
-        if ($this->input->method() === 'post') {
-            $data = array(
-                'nombre' => $this->input->post('nombre'),
-                'email' => $this->input->post('email'),
-                'telefono' => $this->input->post('telefono'),
-                'direccion' => $this->input->post('direccion')
-            );
-
-            if ($this->Usuario_model->actualizar_usuario($usuario_id, $data)) {
-                $this->session->set_flashdata('success', 'Perfil actualizado correctamente');
-                redirect('user/perfil');
-                return;
-            } else {
-                $this->session->set_flashdata('error', 'Error al actualizar el perfil');
-            }
+        
+        // Asegurarse de que el RUT esté disponible
+        if (!isset($data['usuario']->rut) && $this->session->userdata('rut')) {
+            $data['usuario']->rut = $this->session->userdata('rut');
         }
-
-        $data['usuario'] = $this->Usuario_model->get_usuario($usuario_id);
-        $this->load->view('templates/header');
+        
+        // Cargar solo la vista sin header ni navbar
         $this->load->view('user/editar_perfil', $data);
-        $this->load->view('templates/footer');
     }
 
     public function actualizar_perfil() {
@@ -111,20 +104,36 @@ class User extends CI_Controller {
         }
 
         $usuario_id = $this->session->userdata('id');
+        
+        // Inicializar array para datos a actualizar
         $data = array(
             'nombre' => $this->input->post('nombre'),
             'email' => $this->input->post('email'),
             'telefono' => $this->input->post('telefono'),
             'direccion' => $this->input->post('direccion')
         );
+        
+        // Verificar si se proporcionó una nueva contraseña
+        $password = $this->input->post('password');
+        if (!empty($password)) {
+            if ($password === $this->input->post('confirm_password')) {
+                $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+            } else {
+                $this->session->set_flashdata('error', 'Las contraseñas no coinciden');
+                redirect('user/editar_perfil');
+                return;
+            }
+        }
 
-        if ($this->Usuario_model->actualizar_usuario($usuario_id, $data)) {
+        // Actualizar los datos del usuario
+        if ($this->Usuario_model->actualizar($usuario_id, $data)) {
             $this->session->set_flashdata('success', 'Datos actualizados correctamente');
         } else {
             $this->session->set_flashdata('error', 'Error al actualizar los datos');
         }
 
-        redirect('user/perfil');
+        // Redirigir a editar_perfil
+        redirect('user/editar_perfil');
     }
 
     public function nueva_mascota() {

@@ -24,6 +24,10 @@ class Mascota_model extends CI_Model {
         return $this->db->insert('mascotas', $mascota_data);
     }
 
+    public function crear_mascota($datos) {
+        return $this->db->insert('mascotas', $datos);
+    }
+
     // Añade este método al modelo Mascota_model si no existe
     // Añade este método si no existe
     public function count_mascotas() {
@@ -55,12 +59,7 @@ class Mascota_model extends CI_Model {
 
     public function eliminar_mascota($id) {
         $this->db->where('id', $id);
-        $result = $this->db->delete('mascotas');
-        
-        // Debug para verificar la consulta SQL
-        log_message('debug', 'SQL Delete Query: ' . $this->db->last_query());
-        
-        return $result;
+        return $this->db->delete('mascotas');
     }
 
     public function get_all_mascotas() {

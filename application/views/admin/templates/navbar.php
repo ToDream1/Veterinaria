@@ -37,6 +37,7 @@
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
+                    <!-- Modificar el botón de cerrar sesión en la barra de navegación -->
                     <a class="nav-link" href="<?= base_url('auth/logout') ?>">
                         <i class="fas fa-sign-out-alt me-1"></i> Cerrar Sesión
                     </a>
@@ -45,3 +46,24 @@
         </div>
     </div>
 </nav>
+<!-- After the navbar but before the main content -->
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <?php if($this->session->flashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= $this->session->flashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if($this->session->flashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= $this->session->flashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<!-- Continue with the rest of the navbar template -->

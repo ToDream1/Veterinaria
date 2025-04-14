@@ -100,57 +100,73 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Gráfico de usuarios por rol
+    // Gráfico de usuarios por rol (versión de barras)
     const usuarios = <?= json_encode($usuarios) ?>;
     const roleUsuarios = {
         'administrador': 0,
-        'cliente': 0,
-        'otro': 0
+        'usuario': 0,
+        'veterinario': 0,
+        'recepcionista': 0
     };
     
     // Contar cada rol de usuario
     usuarios.forEach(usuario => {
-        const rol = usuario.role ? usuario.role.toLowerCase() : 'otro';
+        const rol = usuario.role ? usuario.role.toLowerCase() : 'usuario';
         if (rol === 'administrador') {
             roleUsuarios.administrador++;
-        } else if (rol === 'cliente') {
-            roleUsuarios.cliente++;
+        } else if (rol === 'veterinario') {
+            roleUsuarios.veterinario++;
+        } else if (rol === 'recepcionista') {
+            roleUsuarios.recepcionista++;
         } else {
-            roleUsuarios.otro++;
+            roleUsuarios.usuario++;
         }
     });
     
-    // Crear el gráfico de torta para usuarios
+    // Crear el gráfico de barras para usuarios
     const ctxUsuarios = document.getElementById('usuariosPorRolChart').getContext('2d');
     const usuariosPorRolChart = new Chart(ctxUsuarios, {
-        type: 'pie',
+        type: 'bar',
         data: {
-            labels: ['Administradores', 'Clientes', 'Otros'],
+            labels: ['Administrador', 'Usuario', 'Veterinario', 'Recepcionista'],
             datasets: [{
-                label: 'Roles de Usuarios',
-                data: [roleUsuarios.administrador, roleUsuarios.cliente, roleUsuarios.otro],
+                label: 'Usuarios por Rol',
+                data: [
+                    roleUsuarios.administrador, 
+                    roleUsuarios.usuario, 
+                    roleUsuarios.veterinario,
+                    roleUsuarios.recepcionista
+                ],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
                     'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)'
+                    'rgba(255, 206, 86, 0.7)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
                     'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)'
+                    'rgba(255, 206, 86, 1)'
                 ],
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0
+                }
+            },
             plugins: {
                 legend: {
-                    position: 'top',
+                    display: false
                 },
                 title: {
                     display: true,
-                    text: 'Distribución por Rol de Usuario'
+                    text: 'Distribución de Usuarios por Rol'
                 }
             }
         }

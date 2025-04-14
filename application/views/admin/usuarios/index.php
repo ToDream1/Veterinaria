@@ -46,11 +46,50 @@
                                             <?= ucfirst($usuario->role) ?>
                                         </span>
                                     </td>
+                                    <!-- En la columna de acciones de la tabla de usuarios -->
                                     <td>
                                         <a href="<?= base_url('admin/editar_usuario/'.$usuario->id) ?>" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                onclick="confirmarEliminacion(<?= $usuario->id ?>, '<?= $usuario->nombre ?>')">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
                                     </td>
+                                    
+                                    <!-- Al final del archivo, añade el modal de confirmación -->
+                                    <!-- Modal de confirmación para eliminar -->
+                                    <div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="eliminarModalLabel">Confirmar eliminación</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Está seguro que desea eliminar el usuario <span id="nombreUsuario" class="fw-bold"></span>?
+                                                    <p class="text-danger mt-2">Esta acción no se puede deshacer.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <a href="#" id="btnEliminar" class="btn btn-danger">Eliminar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Script para la confirmación de eliminación -->
+                                    <script>
+                                    // Función para mostrar el modal de confirmación
+                                    function confirmarEliminacion(id, nombre) {
+                                        document.getElementById('nombreUsuario').textContent = nombre;
+                                        document.getElementById('btnEliminar').href = '<?= base_url('admin/eliminar_usuario/') ?>' + id;
+                                        
+                                        // Mostrar el modal
+                                        var modal = new bootstrap.Modal(document.getElementById('eliminarModal'));
+                                        modal.show();
+                                    }
+                                    </script>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -94,3 +133,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<?php if($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= $this->session->flashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
+<?php if($this->session->flashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= $this->session->flashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>

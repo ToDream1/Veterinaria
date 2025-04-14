@@ -8,7 +8,7 @@ class Usuario_model extends CI_Model {
     }
 
     public function get_usuario($id) {
-        $this->db->select('nombre, email, telefono, direccion');
+        $this->db->select('id, rut, nombre, email, telefono, direccion');
         $this->db->from('users');
         $this->db->where('id', $id);
         $query = $this->db->get();
@@ -28,5 +28,16 @@ class Usuario_model extends CI_Model {
         $query = $this->db->get();
         
         return $query->row();
+    }
+
+    public function actualizar($id, $data) {
+        $this->db->where('id', $id);
+        return $this->db->update('users', $data);
+    }
+    
+    // O si prefieres mantener el nombre que estabas usando:
+    public function actualizar_usuario($id, $data) {
+        $this->db->where('id', $id);
+        return $this->db->update('users', $data);
     }
 }

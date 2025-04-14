@@ -98,6 +98,7 @@ class Auth extends CI_Controller {
     public function logout() {
         // Registrar la actividad de cierre de sesión
         if ($this->session->userdata('logged_in')) {
+            $this->load->model('Actividad_model');
             $this->Actividad_model->registrar_actividad([
                 'accion' => 'LOGOUT',
                 'descripcion' => 'El usuario ' . $this->session->userdata('nombre') . ' ha cerrado sesión'
@@ -107,7 +108,7 @@ class Auth extends CI_Controller {
         // Destruir la sesión
         $this->session->sess_destroy();
         
-        // Redirigir a la página de login
+        // Redireccionar al login
         redirect('auth/login');
     }
     

@@ -4,7 +4,9 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3>Mascotas Registradas</h3>
-            <a href="<?= base_url('admin/crear_mascota') ?>" class="btn btn-success">Nueva Mascota</a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#seleccionarPropietarioModal">
+                Nueva Mascota
+            </button>
         </div>
         <div class="card-body">
             <!-- Añadir caja de búsqueda -->
@@ -48,9 +50,10 @@
                                         <a href="<?= base_url('admin/editar_mascota/'.$mascota->id) ?>" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
-                                        <a href="<?= base_url('admin/eliminar_mascota/'.$mascota->id) ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar esta mascota?')">
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                onclick="confirmarEliminacion(<?= $mascota->id ?>, '<?= $mascota->nombre ?>')">
                                             <i class="fas fa-trash"></i> Eliminar
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -61,6 +64,70 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarModalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro que desea eliminar la mascota <span id="nombreMascota" class="fw-bold"></span>?
+                <p class="text-danger mt-2">Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="#" id="btnEliminar" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para la búsqueda y confirmación de eliminación -->
+<script>
+// Función de búsqueda para mascotas
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchMascotas');
+    const tabla = document.getElementById('tablaMascotas');
+    const filas = tabla.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    
+    searchInput.addEventListener('keyup', function() {
+        const termino = searchInput.value.toLowerCase();
+        
+        for (let i = 0; i < filas.length; i++) {
+            const fila = filas[i];
+            const celdas = fila.getElementsByTagName('td');
+            let encontrado = false;
+            
+            for (let j = 0; j < celdas.length - 1; j++) { // Excluimos la columna de acciones
+                const texto = celdas[j].textContent.toLowerCase();
+                if (texto.indexOf(termino) > -1) {
+                    encontrado = true;
+                    break;
+                }
+            }
+            
+            if (encontrado) {
+                fila.style.display = '';
+            } else {
+                fila.style.display = 'none';
+            }
+        }
+    });
+});
+
+// Función para mostrar el modal de confirmación
+function confirmarEliminacion(id, nombre) {
+    document.getElementById('nombreMascota').textContent = nombre;
+    document.getElementById('btnEliminar').href = '<?= base_url('admin/eliminar_mascota/') ?>' + id;
+    
+    // Mostrar el modal
+    var modal = new bootstrap.Modal(document.getElementById('eliminarModal'));
+    modal.show();
+}
+</script>
 
 <!-- Agregar Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -125,34 +192,51 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Después del script existente -->
+<!-- Modal para seleccionar propietario -->
+<div class="modal fade" id="seleccionarPropietarioModal" tabindex="-1" aria-labelledby="seleccionarPropietarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seleccionarPropietarioModalLabel">Seleccionar Propietario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Seleccione el propietario para la nueva mascota:</p>
+                
+                <div class="mb-3">
+                    <input type="text" id="buscarPropietario" class="form-control" placeholder="Buscar propietario...">
+                </div>
+                
+                <div class="list-group" id="listaPropietarios">
+                    <?php foreach($propietarios as $propietario): ?>
+                        <a href="<?= base_url('admin/crear_mascota/'.$propietario->id) ?>" class="list-group-item list-group-item-action">
+                            <?= $propietario->nombre ?> (<?= $propietario->rut ?>)
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para búsqueda de propietarios -->
 <script>
-// Función de búsqueda para mascotas
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchMascotas');
-    const tabla = document.getElementById('tablaMascotas');
-    const filas = tabla.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    const buscarPropietario = document.getElementById('buscarPropietario');
+    const listaPropietarios = document.getElementById('listaPropietarios').getElementsByTagName('a');
     
-    searchInput.addEventListener('keyup', function() {
-        const termino = searchInput.value.toLowerCase();
+    buscarPropietario.addEventListener('keyup', function() {
+        const termino = buscarPropietario.value.toLowerCase();
         
-        for (let i = 0; i < filas.length; i++) {
-            const fila = filas[i];
-            const celdas = fila.getElementsByTagName('td');
-            let encontrado = false;
-            
-            for (let j = 0; j < celdas.length - 1; j++) { // Excluimos la columna de acciones
-                const texto = celdas[j].textContent.toLowerCase();
-                if (texto.indexOf(termino) > -1) {
-                    encontrado = true;
-                    break;
-                }
-            }
-            
-            if (encontrado) {
-                fila.style.display = '';
+        for (let i = 0; i < listaPropietarios.length; i++) {
+            const texto = listaPropietarios[i].textContent.toLowerCase();
+            if (texto.indexOf(termino) > -1) {
+                listaPropietarios[i].style.display = '';
             } else {
-                fila.style.display = 'none';
+                listaPropietarios[i].style.display = 'none';
             }
         }
     });

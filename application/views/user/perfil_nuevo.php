@@ -104,6 +104,11 @@
             
             <div class="info-list">
                 <div class="info-row">
+                    <div class="info-label">Rut:</div>
+                    <div class="info-value"><?php echo isset($usuario->rut) ? $usuario->rut : '--------'; ?></div>
+                </div>
+                
+                <div class="info-row">
                     <div class="info-label">Nombre:</div>
                     <div class="info-value"><?php echo isset($usuario->nombre) ? $usuario->nombre : '--------'; ?></div>
                 </div>

@@ -1,74 +1,133 @@
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Editar Perfil</h4>
-                    <a href="<?= base_url('index.php/user/perfil') ?>" class="btn btn-light btn-sm">
-                        <i class="fas fa-arrow-left"></i> Volver
-                    </a>
-                </div>
-                <div class="card-body">
-                    <?php if($this->session->flashdata('error')): ?>
-                        <div class="alert alert-danger alert-dismissible fade show">
-                            <?= $this->session->flashdata('error') ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <form action="<?= base_url('index.php/user/actualizar_perfil') ?>" method="POST">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre Completo</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" 
-                                value="<?= $usuario->nombre ?? '--------' ?>" required>
-                        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - Veterinaria Municipal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .btn-hover-effect:hover {
+            transform: translateY(-3px);
+            transition: transform 0.3s;
+        }
+        .readonly-field {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        .btn-volver {
+            margin-bottom: 15px;
+            border-radius: 5px;
+            padding: 6px 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <a href="<?= base_url('user/perfil') ?>" class="btn btn-outline-primary btn-volver">
+                    ← Volver
+                </a>
+                
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0 text-center">Editar Perfil</h3>
+                    </div>
+                    <div class="card-body">
+                        <?php if($this->session->flashdata('success')): ?>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <?= $this->session->flashdata('success') ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <?php endif; ?>
                         
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" 
-                                value="<?= $usuario->email ?? '--------' ?>" required>
-                        </div>
+                        <?php if($this->session->flashdata('error')): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <?= $this->session->flashdata('error') ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <?php endif; ?>
                         
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefono" name="telefono" 
-                                value="<?= $usuario->telefono ?? '--------' ?>" 
-                                placeholder="Ingrese su teléfono">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" 
-                                value="<?= $usuario->direccion ?? '--------' ?>" 
-                                placeholder="Ingrese su dirección">
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="<?= base_url('index.php/user/perfil') ?>" class="btn btn-secondary me-md-2">Cancelar</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </form>
+                        <form action="<?= base_url('user/actualizar_perfil') ?>" method="post">
+                            <div class="mb-3">
+                                <label for="rut" class="form-label fw-bold">RUT</label>
+                                <input type="text" class="form-control readonly-field" id="rut" name="rut" value="<?= isset($usuario->rut) ? $usuario->rut : '' ?>" readonly>
+                                <div class="form-text">El RUT no se puede modificar.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label fw-bold">Nombre Completo</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?= isset($usuario->nombre) ? $usuario->nombre : '' ?>" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-bold">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= isset($usuario->email) ? $usuario->email : '' ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label fw-bold">Dirección</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion" value="<?= isset($usuario->direccion) ? $usuario->direccion : '' ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label fw-bold">Teléfono</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" value="<?= isset($usuario->telefono) ? $usuario->telefono : '' ?>">
+                            </div>
+                            
+                            <hr class="my-4">
+                            <h5 class="mb-3">Cambiar Contraseña</h5>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-bold">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password">
+                                <div class="form-text">Deje en blanco si no desea cambiar la contraseña.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label fw-bold">Confirmar Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios</button>
+                                <a href="<?= base_url('user/perfil') ?>" class="btn btn-secondary">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<style>
-.card {
-    border: none;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-}
-
-.card-header {
-    background-color: #4e73df;
-    border-bottom: none;
-}
-
-.form-control:disabled, .form-control[readonly] {
-    background-color: #f8f9fc;
-    opacity: 1;
-}
-</style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validación del formulario
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword && password !== '') {
+                event.preventDefault();
+                alert('Las contraseñas no coinciden');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -42,10 +42,25 @@ class User_model extends CI_Model {
         return $query->result();
     }
 
+    public function buscar_usuarios_por_nombre($nombre) {
+        // Limit the search to 10 results for better performance
+        $this->db->like('nombre', $nombre);
+        $this->db->or_like('rut', $nombre);
+        $this->db->or_like('email', $nombre);
+        $this->db->limit(10);
+        $query = $this->db->get('users');
+        return $query->result();
+    }
+
     public function crear($datos) {
         // Eliminar confirm_password si existe en el array
         if (isset($datos['confirm_password'])) {
             unset($datos['confirm_password']);
+        }
+        
+        // Asignar rol por defecto si no se especifica
+        if (!isset($datos['role']) || empty($datos['role'])) {
+            $datos['role'] = 'usuario';
         }
         
         // Encriptar la contraseña antes de guardarla
@@ -83,5 +98,16 @@ class User_model extends CI_Model {
 
     public function get_user_by_id($id) {
         return $this->db->get_where('users', ['id' => $id])->row();
+    }
+
+    public function get_users_by_role($role) {
+        $this->db->where('role', $role);
+        $query = $this->db->get('users'); // Corregido de 'usuarios' a 'users'
+        return $query->result();
+    }
+    
+    // Añadir este método para resolver el error
+    public function get_user($id) {
+        return $this->get_user_by_id($id);
     }
 }
