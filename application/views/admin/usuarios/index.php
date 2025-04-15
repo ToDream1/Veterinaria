@@ -42,8 +42,25 @@
                                     <td><?= $usuario->nombre ?></td>
                                     <td><?= $usuario->email ?></td>
                                     <td>
-                                        <span class="badge <?= $usuario->role == 'administrador' ? 'bg-danger' : 'bg-primary' ?>">
-                                            <?= ucfirst($usuario->role) ?>
+                                        <span class="badge <?php
+                                            switch($usuario->role) {
+                                                case 'administrador':
+                                                    echo 'bg-danger';
+                                                    break;
+                                                case 'recepcionista':
+                                                    echo 'bg-info';
+                                                    break;
+                                                case 'veterinario':
+                                                    echo 'bg-success';
+                                                    break;
+                                                case 'usuario':
+                                                    echo 'bg-secondary';
+                                                    break;
+                                                default:
+                                                    echo 'bg-secondary';
+                                            }
+                                        ?>">
+                                            <?= !empty($usuario->role) ? ucfirst($usuario->role) : 'Usuario' ?>
                                         </span>
                                     </td>
                                     <!-- En la columna de acciones de la tabla de usuarios -->

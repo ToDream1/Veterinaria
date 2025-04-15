@@ -11,10 +11,15 @@ class Auth extends CI_Controller {
 
     public function index() {
         if($this->session->userdata('logged_in')) {
-            if($this->session->userdata('role') === 'administrador') {
-                redirect('admin');  // Cambiado de 'admin/dashboard' a 'admin'
-            } else {
-                redirect('user/index');
+            switch($this->session->userdata('role')) {
+                case 'administrador':
+                    redirect('admin');
+                    break;
+                case 'recepcionista':
+                    redirect('recepcionista');
+                    break;
+                default:
+                    redirect('user/index');
             }
         }
         $this->load->view('auth/login');
@@ -38,17 +43,23 @@ class Auth extends CI_Controller {
             
             $this->session->set_userdata($userdata);
             
-            // Registrar la actividad de inicio de sesión con el nombre del usuario
+            // Registrar actividad
             $this->Actividad_model->registrar_actividad([
                 'accion' => 'LOGIN',
                 'descripcion' => 'El usuario ' . $result->nombre . ' ha iniciado sesión',
-                'usuario' => $result->nombre  // Añadiendo el nombre del usuario
+                'usuario' => $result->nombre
             ]);
             
-            if($result->role === 'administrador') {
-                redirect('admin');  // Cambiado de 'admin/dashboard' a 'admin'
-            } else {
-                redirect('user/index');
+            // Redirigir según el rol
+            switch($result->role) {
+                case 'administrador':
+                    redirect('admin');
+                    break;
+                case 'recepcionista':
+                    redirect('recepcionista');
+                    break;
+                default:
+                    redirect('user/index');
             }
         } else {
             $mensaje_error = $result === 'rut_invalido' ? 'El RUT ingresado no existe en nuestros registros' : 'La contraseña ingresada es incorrecta';

@@ -51,6 +51,17 @@
                             <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                         </div>
                         
+                        <div class="form-group">
+                            <label for="role">Rol</label>
+                            <select name="role" id="role" class="form-control" required>
+                                <option value="">Seleccione un rol</option>
+                                <option value="usuario">Usuario</option>
+                                <option value="administrador">Administrador</option>
+                                <option value="recepcionista">Recepcionista</option>
+                                <option value="veterinario">Veterinario</option>
+                            </select>
+                        </div>
+                        
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="<?= base_url('admin/usuarios') ?>" class="btn btn-secondary me-md-2">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Crear Usuario</button>

@@ -1,33 +1,23 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
         <div class="d-flex align-items-center">
-            <a class="navbar-brand" href="<?= base_url('admin/dashboard') ?>">
+            <a class="navbar-brand" href="<?= base_url('recepcionista') ?>">
                 <i class="fas fa-paw me-2"></i> Veterinaria Municipal
             </a>
             <ul class="navbar-nav ms-3">
                 <li class="nav-item">
-                    <a class="nav-link <?= $this->uri->segment(2) == 'usuarios' ? 'active' : '' ?>" href="<?= base_url('admin/usuarios') ?>">
+                    <a class="nav-link <?= $this->uri->segment(2) == 'usuarios' ? 'active' : '' ?>" href="<?= base_url('recepcionista/usuarios') ?>">
                         <i class="fas fa-users me-1"></i> Usuarios
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $this->uri->segment(2) == 'mascotas' ? 'active' : '' ?>" href="<?= base_url('admin/mascotas') ?>">
+                    <a class="nav-link <?= $this->uri->segment(2) == 'mascotas' ? 'active' : '' ?>" href="<?= base_url('recepcionista/mascotas') ?>">
                         <i class="fas fa-dog me-1"></i> Mascotas
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $this->uri->segment(2) == 'citas' ? 'active' : '' ?>" href="<?= base_url('admin/citas') ?>">
+                    <a class="nav-link <?= $this->uri->segment(2) == 'citas' ? 'active' : '' ?>" href="<?= base_url('recepcionista/citas') ?>">
                         <i class="fas fa-calendar-check me-1"></i> Citas
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $this->uri->segment(2) == 'estadisticas' ? 'active' : '' ?>" href="<?= base_url('admin/estadisticas') ?>">
-                        <i class="fas fa-chart-pie me-1"></i> Estadísticas
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $this->uri->segment(2) == 'actividades' ? 'active' : '' ?>" href="<?= base_url('admin/actividades') ?>">
-                        <i class="fas fa-history me-1"></i> Registro de Actividad
                     </a>
                 </li>
             </ul>
@@ -45,8 +35,7 @@
             </ul>
         </div>
     </div>
-</nav>
-<!-- After the navbar but before the main content -->
+</nav><!-- After the navbar but before the main content -->
 <div class="container-fluid mt-3">
     <div class="row justify-content-center">
         <div class="col-md-6">

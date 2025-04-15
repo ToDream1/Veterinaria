@@ -113,6 +113,9 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a href="<?= base_url('admin/citas/crear') ?>" class="btn btn-primary">
+                            <i class="fas fa-calendar-plus"></i> Crear Cita
+                        </a>
                         <a href="<?= base_url('admin/citas') ?>" class="text-white">Ver detalles</a>
                         <i class="fas fa-angle-right text-white"></i>
                     </div>

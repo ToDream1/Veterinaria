@@ -7,26 +7,14 @@ class Usuario_model extends CI_Model {
         parent::__construct();
     }
 
-    public function get_usuario($id) {
-        $this->db->select('id, rut, nombre, email, telefono, direccion');
-        $this->db->from('users');
-        $this->db->where('id', $id);
-        $query = $this->db->get();
-        
-        if ($query->num_rows() > 0) {
-            return $query->row();
-        }
-        
-        return false;
+    public function get_usuarios_by_rol($rol) {
+        $this->db->where('rol', $rol);
+        return $this->db->get('users')->result();  // Cambiado a 'users'
     }
 
-    // Podemos eliminar get_usuario_by_id ya que usaremos get_usuario
-    public function get_usuario_by_id($user_id) {
-        $this->db->select('nombre, email, telefono, direccion');
-        $this->db->from('users');
-        $this->db->where('id', $user_id);
-        $query = $this->db->get();
-        
+    public function get_usuario($id) {
+        $this->db->where('id', $id);
+        $query = $this->db->get('users');
         return $query->row();
     }
 
@@ -34,10 +22,17 @@ class Usuario_model extends CI_Model {
         $this->db->where('id', $id);
         return $this->db->update('users', $data);
     }
-    
-    // O si prefieres mantener el nombre que estabas usando:
-    public function actualizar_usuario($id, $data) {
-        $this->db->where('id', $id);
-        return $this->db->update('users', $data);
+
+    // Eliminar este método ya que es redundante
+    // public function actualizar_usuario($id, $data) {
+    //     $this->db->where('id', $id);
+    //     return $this->db->update('users', $data);
+    // }
+
+    public function get_propietarios() {
+        $this->db->select('id, nombre, apellidos, email, telefono, direccion');
+        $this->db->from('users');  // Cambiado a 'users'
+        $this->db->where('rol', 'propietario');
+        return $this->db->get()->result();
     }
 }

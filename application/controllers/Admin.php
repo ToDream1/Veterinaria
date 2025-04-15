@@ -412,6 +412,14 @@ class Admin extends CI_Controller {
         $this->load->view('admin/templates/footer');
     }
     
+    public function crear_cita() {
+        $data['title'] = 'Crear Cita';
+        $this->load->view('admin/templates/header', $data);
+        $this->load->view('admin/templates/navbar');
+        $this->load->view('admin/citas/crear_cita');
+        $this->load->view('admin/templates/footer');
+    }
+    
     public function estadisticas() {
         $data['titulo'] = 'Estadísticas del Sistema';
         

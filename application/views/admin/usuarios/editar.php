@@ -42,10 +42,13 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="role" class="form-label">Rol</label>
-                            <select class="form-select" id="role" name="role" required>
-                                <option value="usuario" <?= ($usuario->role == 'usuario') ? 'selected' : '' ?>>Usuario</option>
+                            <label for="role">Rol</label>
+                            <select name="role" id="role" class="form-control" required>
+                                <option value="">Seleccione un rol</option>
                                 <option value="administrador" <?= ($usuario->role == 'administrador') ? 'selected' : '' ?>>Administrador</option>
+                                <option value="usuario" <?= ($usuario->role == 'usuario') ? 'selected' : '' ?>>Usuario</option>
+                                <option value="recepcionista" <?= ($usuario->role == 'recepcionista') ? 'selected' : '' ?>>Recepcionista</option>
+                                <option value="veterinario" <?= ($usuario->role == 'veterinario') ? 'selected' : '' ?>>Veterinario</option>
                             </select>
                         </div>
                         

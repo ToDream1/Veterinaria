@@ -23,9 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/veterinaria/Veterinaria/';
-
-$config['index_page'] = 'index.php';
+$config['base_url'] = 'http://localhost/veterinaria/Veterinaria';
+$config['index_page'] = '';  // Cambia esto de 'index.php' a ''
 $config['uri_protocol'] = 'REQUEST_URI';
 
 // Remove or comment out this duplicate line
@@ -529,4 +528,4 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 $config['time_zone'] = 'America/Santiago';
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 2;  // Cambiar a nivel 2 para ver mensajes de depuración
