@@ -53,28 +53,75 @@ class Admin extends CI_Controller {
         $this->load->view('admin/templates/navbar');
         $this->load->view('admin/usuarios/index', $data);
         $this->load->view('admin/templates/footer');
+     }
+
+    public function actualizar_usuario($id) {
+        if ($this->input->post()) {
+            $datos = $this->input->post();
+            
+            if($this->User_model->actualizar($id, $datos)) {
+                // Registrar la actividad con el nombre del administrador
+                $nombre_admin = $this->session->userdata('nombre');
+                $this->Actividad_model->registrar_actividad([
+                    'accion' => 'UPDATE',
+                    'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre'],
+                    'usuario' => $nombre_admin
+                ]);
+                
+                $this->session->set_flashdata('success', 'Usuario actualizado correctamente');
+            } else {
+                $this->session->set_flashdata('error', 'Error al actualizar el usuario');
+            }
+            redirect('admin/usuarios');
+        }
+    }
+
+    public function eliminar_usuario($id) {
+        // Obtener información del usuario antes de eliminarlo
+        $usuario = $this->User_model->get_user_by_id($id);
+        
+        if (!$usuario) {
+            $this->session->set_flashdata('error', 'El usuario no existe o ya ha sido eliminado');
+            redirect('admin/usuarios');
+        }
+        
+        // Intentar eliminar el usuario
+        if ($this->User_model->eliminar($id)) {
+            // Registrar la actividad con el nombre del administrador
+            $nombre_admin = $this->session->userdata('nombre');
+            $this->Actividad_model->registrar_actividad([
+                'accion' => 'DELETE',
+                'descripcion' => 'Se eliminó el usuario: ' . $usuario->nombre,
+                'usuario' => $nombre_admin
+            ]);
+            
+            $this->session->set_flashdata('success', 'Usuario eliminado correctamente');
+        } else {
+            $this->session->set_flashdata('error', 'Error al eliminar el usuario');
+        }
+        
+        redirect('admin/usuarios');
     }
 
     public function crear_usuario() {
         if ($this->input->post()) {
             $datos = $this->input->post();
+            
             if($this->User_model->crear($datos)) {
+                // Registrar la actividad con el nombre del administrador
+                $nombre_admin = $this->session->userdata('nombre');
                 $this->Actividad_model->registrar_actividad([
                     'accion' => 'CREATE',
-                    'descripcion' => 'Se creó un nuevo usuario: ' . $datos['nombre']
+                    'descripcion' => 'Se creó el usuario: ' . $datos['nombre'],
+                    'usuario' => $nombre_admin
                 ]);
+                
                 $this->session->set_flashdata('success', 'Usuario creado correctamente');
-                redirect('admin/usuarios');
             } else {
                 $this->session->set_flashdata('error', 'Error al crear el usuario');
             }
+            redirect('admin/usuarios');
         }
-
-        $data['titulo'] = 'Crear Usuario';
-        $this->load->view('admin/templates/header', $data);
-        $this->load->view('admin/templates/navbar');
-        $this->load->view('admin/usuarios/crear');
-        $this->load->view('admin/templates/footer');
     }
 
     public function editar_usuario($id) {
@@ -356,6 +403,15 @@ class Admin extends CI_Controller {
         $this->output->set_content_type('application/json');
         echo json_encode($datos);
     }
+    public function citas() {
+        $data['titulo'] = 'Gestión de Citas';
+        
+        $this->load->view('admin/templates/header', $data);
+        $this->load->view('admin/templates/navbar');
+        $this->load->view('admin/citas/index');
+        $this->load->view('admin/templates/footer');
+    }
+    
     public function estadisticas() {
         $data['titulo'] = 'Estadísticas del Sistema';
         
@@ -381,29 +437,4 @@ class Admin extends CI_Controller {
         
         echo json_encode($usuarios);
     }
-    
-    public function eliminar_usuario($id) {
-            // Obtener información del usuario antes de eliminarlo
-            $usuario = $this->User_model->get_user_by_id($id);
-            
-            if (!$usuario) {
-                $this->session->set_flashdata('error', 'El usuario no existe o ya ha sido eliminado');
-                redirect('admin/usuarios');
-            }
-            
-            // Intentar eliminar el usuario
-            if ($this->User_model->eliminar($id)) {
-                // Registrar la actividad
-                $this->Actividad_model->registrar_actividad([
-                    'accion' => 'DELETE',
-                    'descripcion' => 'Se eliminó el usuario: ' . $usuario->nombre
-                ]);
-                
-                $this->session->set_flashdata('success', 'Usuario eliminado correctamente');
-            } else {
-                $this->session->set_flashdata('error', 'Error al eliminar el usuario');
-            }
-            
-            redirect('admin/usuarios');
-        }
 }

@@ -71,24 +71,38 @@ class User_model extends CI_Model {
     }
 
     public function actualizar($id, $datos) {
-        // Preparar los datos para actualizar
+        // Preparar los datos base para actualizar
         $data = array(
-            'rut' => $datos['rut'],
             'nombre' => $datos['nombre'],
             'email' => isset($datos['email']) ? $datos['email'] : NULL,
             'direccion' => isset($datos['direccion']) ? $datos['direccion'] : '',
-            'telefono' => isset($datos['telefono']) ? $datos['telefono'] : '',
-            'role' => $datos['role']
+            'telefono' => isset($datos['telefono']) ? $datos['telefono'] : ''
         );
         
-        // Si se proporcionó una nueva contraseña, encriptarla
-        if(isset($datos['password']) && !empty($datos['password'])) {
-            $data['password'] = password_hash($datos['password'], PASSWORD_DEFAULT);
+        if (isset($datos['rut'])) {
+            $data['rut'] = $datos['rut'];
+        }
+
+        // Manejo específico de la contraseña
+        if (isset($datos['password']) && !empty(trim($datos['password']))) {
+            $data['password'] = password_hash(trim($datos['password']), PASSWORD_BCRYPT);
+            
+            // Verificar que el hash se generó correctamente
+            if ($data['password'] === false) {
+                log_message('error', 'Error al generar hash de contraseña para usuario ID: ' . $id);
+                return false;
+            }
         }
         
-        // Actualizar el usuario en la base de datos
+        // Actualizar en la base de datos
         $this->db->where('id', $id);
-        return $this->db->update('users', $data);
+        $result = $this->db->update('users', $data);
+        
+        if ($result) {
+            log_message('debug', 'Usuario actualizado correctamente. ID: ' . $id);
+        }
+        
+        return $result;
     }
 
     public function eliminar($id) {

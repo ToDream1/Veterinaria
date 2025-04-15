@@ -38,10 +38,11 @@ class Auth extends CI_Controller {
             
             $this->session->set_userdata($userdata);
             
-            // Registrar la actividad de inicio de sesión
+            // Registrar la actividad de inicio de sesión con el nombre del usuario
             $this->Actividad_model->registrar_actividad([
                 'accion' => 'LOGIN',
-                'descripcion' => 'El usuario ' . $result->nombre . ' ha iniciado sesión'
+                'descripcion' => 'El usuario ' . $result->nombre . ' ha iniciado sesión',
+                'usuario' => $result->nombre  // Añadiendo el nombre del usuario
             ]);
             
             if($result->role === 'administrador') {
@@ -80,6 +81,13 @@ class Auth extends CI_Controller {
                 );
                 
                 if($this->User_model->crear($datos)) {
+                    // Registrar la actividad de registro
+                    $this->Actividad_model->registrar_actividad([
+                        'accion' => 'REGISTER',
+                        'descripcion' => 'Se registró un nuevo usuario: ' . $datos['nombre'],
+                        'usuario' => $datos['nombre']  // Añadiendo el nombre del usuario
+                    ]);
+                    
                     $this->session->set_flashdata('success', 'Usuario registrado exitosamente. Por favor inicia sesión.');
                     redirect('auth');
                 } else {
@@ -96,19 +104,16 @@ class Auth extends CI_Controller {
     }
 
     public function logout() {
-        // Registrar la actividad de cierre de sesión
-        if ($this->session->userdata('logged_in')) {
-            $this->load->model('Actividad_model');
-            $this->Actividad_model->registrar_actividad([
-                'accion' => 'LOGOUT',
-                'descripcion' => 'El usuario ' . $this->session->userdata('nombre') . ' ha cerrado sesión'
-            ]);
-        }
-        
-        // Destruir la sesión
+        // Registrar la actividad de cierre de sesión antes de destruir la sesión
+        $nombre_usuario = $this->session->userdata('nombre');
+        $this->load->model('Actividad_model');
+        $this->Actividad_model->registrar_actividad([
+            'accion' => 'LOGOUT',
+            'descripcion' => 'El usuario ' . $nombre_usuario . ' ha cerrado sesión',
+            'usuario' => $nombre_usuario
+        ]);
+
         $this->session->sess_destroy();
-        
-        // Redireccionar al login
         redirect('auth/login');
     }
     

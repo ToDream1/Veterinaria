@@ -108,17 +108,36 @@ class User extends CI_Controller {
             $id = $this->session->userdata('id');
             $datos = $this->input->post();
             
+            // Asegurarse de usar el modelo User_model en lugar de Usuario_model
+            $this->load->model('User_model'); // Cambiar esta línea si estabas usando Usuario_model
+            
+            // Validar que si se ingresa contraseña, no esté vacía
+            if (isset($datos['password']) && !empty(trim($datos['password']))) {
+                // Verificar que las contraseñas coincidan
+                if ($datos['password'] !== $datos['confirm_password']) {
+                    $this->session->set_flashdata('error', 'Las contraseñas no coinciden');
+                    redirect('user/perfil');
+                    return;
+                }
+                // Asegurarse de que la contraseña se hashee
+                $datos['password'] = trim($datos['password']);
+            } else {
+                // Si la contraseña está vacía, no la actualizamos
+                unset($datos['password']);
+            }
+            
+            // Eliminar confirm_password antes de enviar al modelo
             unset($datos['confirm_password']);
             
-            if($this->Usuario_model->actualizar($id, $datos)) {
-                // Registrar la actividad con el nombre del usuario que tiene la sesión iniciada
-                $nombre_usuario = $this->session->userdata('nombre');
-                $this->Actividad_model->registrar_actividad([
-                    'accion' => 'UPDATE',
-                    'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre'],
-                    'usuario' => $nombre_usuario
-                ]);
-                
+            // Registrar la actividad con el nombre del usuario que realiza la acción
+            $nombre_usuario = $this->session->userdata('nombre');
+            $this->Actividad_model->registrar_actividad([
+                'accion' => 'UPDATE',
+                'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre'],
+                'usuario' => $nombre_usuario // Usar el nombre del usuario en lugar de 'Sistema'
+            ]);
+            
+            if($this->User_model->actualizar($id, $datos)) {
                 $this->session->set_flashdata('success', 'Perfil actualizado correctamente');
             } else {
                 $this->session->set_flashdata('error', 'Error al actualizar el perfil');
@@ -213,14 +232,12 @@ class User extends CI_Controller {
             log_message('debug', 'Actualizando mascota: ' . print_r($update_data, true));
         
             if ($this->Mascota_model->actualizar_mascota($id, $update_data)) {
-                // Registrar la actividad
-                $this->load->model('Actividad_model');
-                // En cualquier método que registre actividad
-                    $this->Actividad_model->registrar_actividad([
-                        'accion' => 'UPDATE',
-                        'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre']
-                        // No incluir el campo 'usuario' aquí
-                    ]);
+                // Registrar la actividad con el nombre del usuario
+                $nombre_usuario = $this->session->userdata('nombre');
+                $this->Actividad_model->registrar_actividad([
+                    'accion' => 'UPDATE',
+                    'descripcion' => 'Se actualizó la mascota: ' . $update_data['nombre'],
+                    'usuario' => $nombre_usuario
                 ]);
                 
                 $this->session->set_flashdata('success', 'Mascota actualizada exitosamente');
