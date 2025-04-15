@@ -108,15 +108,15 @@ class User extends CI_Controller {
             $id = $this->session->userdata('id');
             $datos = $this->input->post();
             
-            // Remove confirm_password field as it's not in the database
             unset($datos['confirm_password']);
             
             if($this->Usuario_model->actualizar($id, $datos)) {
-                // Registrar la actividad
+                // Registrar la actividad con el nombre del usuario que tiene la sesión iniciada
+                $nombre_usuario = $this->session->userdata('nombre');
                 $this->Actividad_model->registrar_actividad([
                     'accion' => 'UPDATE',
                     'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre'],
-                    'usuario_id' => $id
+                    'usuario' => $nombre_usuario
                 ]);
                 
                 $this->session->set_flashdata('success', 'Perfil actualizado correctamente');
@@ -136,11 +136,10 @@ class User extends CI_Controller {
         $usuario = $this->Usuario_model->get_usuario($id);
 
         if ($this->Usuario_model->eliminar($id)) {
-            // Registrar la actividad antes de cerrar sesión
             $this->Actividad_model->registrar_actividad([
                 'accion' => 'DELETE',
                 'descripcion' => 'El usuario eliminó su cuenta: ' . $usuario->nombre,
-                'usuario_id' => $id
+                'usuario' => $this->session->userdata('nombre')  // Nombre del usuario que realiza la acción
             ]);
             
             $this->session->sess_destroy();
@@ -158,9 +157,7 @@ class User extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    // En el método agregar_mascota, asegúrate de que se registre la actividad
     public function agregar_mascota() {
-        // Validar y procesar el formulario
         if ($this->input->post()) {
             $data = array(
                 'nombre' => $this->input->post('nombre'),
@@ -175,11 +172,11 @@ class User extends CI_Controller {
             );
             
             if ($this->Mascota_model->crear_mascota($data)) {
-                // Registrar la actividad
-                $this->load->model('Actividad_model');
+                $nombre_usuario = $this->session->userdata('nombre');
                 $this->Actividad_model->registrar_actividad([
                     'accion' => 'CREATE',
-                    'descripcion' => 'El usuario registró una nueva mascota: ' . $data['nombre']
+                    'descripcion' => 'El usuario registró una nueva mascota: ' . $data['nombre'],
+                    'usuario' => $nombre_usuario
                 ]);
                 
                 $this->session->set_flashdata('success', 'Mascota agregada exitosamente');
@@ -218,9 +215,12 @@ class User extends CI_Controller {
             if ($this->Mascota_model->actualizar_mascota($id, $update_data)) {
                 // Registrar la actividad
                 $this->load->model('Actividad_model');
-                $this->Actividad_model->registrar_actividad([
-                    'accion' => 'UPDATE',
-                    'descripcion' => 'El usuario actualizó la mascota: ' . $update_data['nombre']
+                // En cualquier método que registre actividad
+                    $this->Actividad_model->registrar_actividad([
+                        'accion' => 'UPDATE',
+                        'descripcion' => 'Se actualizó el usuario: ' . $datos['nombre']
+                        // No incluir el campo 'usuario' aquí
+                    ]);
                 ]);
                 
                 $this->session->set_flashdata('success', 'Mascota actualizada exitosamente');

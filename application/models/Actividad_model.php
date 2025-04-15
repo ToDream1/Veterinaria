@@ -5,12 +5,18 @@ class Actividad_model extends CI_Model {
     
     public function __construct() {
         parent::__construct();
+        $this->load->library('session');  // Asegurarnos de que la sesión está cargada
     }
     
     public function registrar_actividad($datos) {
-        // Add current timestamp with proper timezone
-        date_default_timezone_set('America/Santiago'); // Set to Chile timezone
-        $datos['fecha'] = date('Y-m-d H:i:s');
+        date_default_timezone_set('America/Santiago');
+        
+        // Asegurarnos de obtener el nombre del usuario de la sesión actual
+        $datos['usuario'] = $this->session->userdata('nombre') ?: 'Sistema';
+
+        $timestamp = new DateTime('now', new DateTimeZone('America/Santiago'));
+        $timestamp->modify('-1 hour');
+        $datos['fecha'] = $timestamp->format('Y-m-d H:i:s');
         
         return $this->db->insert('actividades', $datos);
     }

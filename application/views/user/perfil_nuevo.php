@@ -93,7 +93,7 @@
 </head>
 <body>
     <div class="profile-container">
-        <!-- Add flash messages section -->
+        <!-- Add this at the top of the content section -->
         <?php if($this->session->flashdata('success')): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?php echo $this->session->flashdata('success'); ?>
